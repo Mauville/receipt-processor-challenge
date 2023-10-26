@@ -47,10 +47,9 @@ MySQL could also be used, if the schema of a receipt is consistent.
 
 *I've actually worked at MongoDB before, so I think it's mature enough to support a big app like Fetch.
 
-**2. Avoiding recalculation of points.**
+**2. Implementing high availability.**
 
-We could store the point count on the ticket and implement update logic, or cache
-it (Redis) if high availability is needed.
+If high availability for operations is needed, we could cache the points using Redis or Memcached.
 
 **3. Implementing a duplicate detector mechanism.**
 
