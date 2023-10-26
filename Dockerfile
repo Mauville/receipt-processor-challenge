@@ -12,8 +12,8 @@ WORKDIR /usr/src/app
 # Copy the local project files into the container
 COPY . .
 
-# Install required Python packages
-RUN pip install --no-cache-dir requests flask
+# Install flask
+RUN pip install --no-cache-dir flask
 
 # The command to run when the container starts
 CMD ["python", "main.py"]

@@ -1,7 +1,7 @@
 # I saw no point in creating a class for this, since state is not needed right now.
 # A refactor into a class for inheritance could be justified, if we ever needed to do
-# different types of calculations depending on the receipt type i.e.
-import decimal
+# different types of calculations depending on the receipt type.
+from decimal import Decimal
 from typing import List
 
 from models.Receipt import Receipt, Item
@@ -14,39 +14,37 @@ def _count_alphanumeric(retailer: str) -> int:
     return sum(1 for char in retailer if char.isalnum())
 
 
-def _count_is_round_amount(total: decimal.Decimal) -> int:
+def _count_is_round_amount(total: Decimal) -> int:
     """
     Count 50 points if the total is a round dollar amount with no cents.
     """
     return 50 if int(total) == total else 0
 
 
-def _count_is_quartile(total: decimal.Decimal) -> int:
+def _count_is_quartile(total: Decimal) -> int:
     """
     Count 25 points if the total is a multiple of 0.25.
     """
-    return 25 if total % decimal.Decimal(0.25) == 0 else 0
+    return 25 if total % Decimal(0.25) == 0 else 0
 
 
 def _count_even_items(item_count: int) -> int:
     """
     Count 5 points for every two items on the receipt.
     """
-    if item_count < 2:
-        return 0
-
     return 0 if item_count < 2 else 5 * item_count // 2
 
 
 def _count_description_length(items: List[Item]) -> int:
     """
-    If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer. The result is the number of points earned.
+    If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2
+    and round up to the nearest integer. The result is the number of points earned.
     """
 
     total = 0
     for item in items:
         if len(item.shortDescription.strip()) % 3 == 0:
-            total += round(item.price * decimal.Decimal(0.2))
+            total += round(item.price * Decimal(0.2))
     return total
 
 

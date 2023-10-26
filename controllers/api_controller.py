@@ -1,6 +1,6 @@
 import json
 
-from flask import jsonify, Response
+from flask import jsonify, Response, abort
 
 from models.Receipt import Receipt
 from repositories.ReceiptRepository import ReceiptRepository
@@ -16,6 +16,9 @@ def home_response() -> str:
 
 
 def process_receipt_response(request_json: json) -> Response:
+    """
+    Stores a receipt, and returns a JSON with its OID.
+    """
     repository = ReceiptRepository()
     receipt = Receipt.from_json(request_json)
     repository.add_receipt(receipt)
@@ -23,8 +26,13 @@ def process_receipt_response(request_json: json) -> Response:
 
 
 def get_points_for_receipt_response(uuid_str: str) -> Response:
+    """
+    Returns the points that a receipt has.
+    """
     repository = ReceiptRepository()
     receipt = repository.get_receipt(uuid_str)
+    if not receipt:
+        abort(404)
     # (Lazily) Memoize points for next time this is used.
     if not receipt.points:
         receipt.points = count_points(receipt)
